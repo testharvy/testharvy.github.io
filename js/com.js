@@ -24,63 +24,73 @@ $(function(){
         	$slide.filter('[data-x='+coord[0]+'][data-y='+coord[1]+']').addClass('-canmove');
 		}
     };
-	$slide.each(function (index, el) {
-		var x = $(el).data('x'),
-			y = $(el).data('y'),
-			open = $(el).data('open').split(';');
-        $(el).click(function () {
-        	if($(el).hasClass('-canmove')){
-        		if( !$(el).hasClass('-show') ){
-	        		$(el).addClass('-show');
-	        		makeActive(open);
-	        	}
-	            goTo(x, y);
-        	}
-        });
-    });	
+
 
     goTo(0,0 );
     makeActive(["1,0"]);
 
-    var trySwipe = function(x,y) {
-    	var $tmp_slide = $slide.filter('[data-x='+x+'][data-y='+y+']'),
-    		open = $tmp_slide.data('open').split(';');
+    var isMobile = function () {
+        return (/Android|iPhone|iPad|iPod|BlackBerry/i).test(navigator.userAgent || navigator.vendor || window.opera);
+    };
+    if (!isMobile()) {
+	    $slide.each(function (index, el) {
+			var x = $(el).data('x'),
+				y = $(el).data('y'),
+				open = $(el).data('open').split(';');
+	        $(el).click(function () {
+	        	if($(el).hasClass('-canmove')){
+	        		if( !$(el).hasClass('-show') ){
+		        		$(el).addClass('-show');
+		        		makeActive(open);
+		        	}
+		            goTo(x, y);
+	        	}
+	        });
+	    });	
+	    } else {
+	    	    var trySwipe = function(x,y) {
+	    	var $tmp_slide = $slide.filter('[data-x='+x+'][data-y='+y+']'),
+	    		open = $tmp_slide.data('open').split(';');
 
-    	if($slide.filter('[data-x='+x+'][data-y='+y+']').hasClass('-canmove')){
-    		goTo(x,y);
-    		$tmp_slide.addClass('-show');
-    		makeActive(open);
-    	}
-    	
-   	};
+	    		console.log('trySwipe'+x + y)
 
-    var goLeft = function() {
-    	var x = current_x+1,
-    		y = current_y;
-    	trySwipe(x,y);
-    	
-   	};
-   	var goRight = function() {
-    	var x = current_x-1,
-    		y = current_y;
-    	trySwipe(x,y);
-    	
-   	};
+	    	if($slide.filter('[data-x='+x+'][data-y='+y+']').hasClass('-canmove')){
+	    		goTo(x,y);
+	    		$tmp_slide.addClass('-show');
+	    		makeActive(open);
+	    	}
+	    	
+	   	};
 
-   	var goUp = function() {
-   		var x = current_x,
-    		y = current_y+1;
-    	trySwipe(x,y);
-   	};
-   	var goDown = function() {
-   		var x = current_x,
-    		y = current_y-1;
-    	trySwipe(x,y);
-   	};
+	    var goLeft = function() {
+	    	var x = current_x+1,
+	    		y = current_y;
+	    	trySwipe(x,y);
+	    	
+	   	};
+	   	var goRight = function() {
+	    	var x = current_x-1,
+	    		y = current_y;
+	    	trySwipe(x,y);
+	    	
+	   	};
 
-    $slideshow.on( "swipeleft", goLeft );
-    $slideshow.on( "swiperight", goRight);
-    $slideshow.on( "swipeup", goUp );
-   	$slideshow.on( "swipedown", goDown );
+	   	var goUp = function() {
+	   		var x = current_x,
+	    		y = current_y+1;
+	    	trySwipe(x,y);
+	   	};
+	   	var goDown = function() {
+	   		var x = current_x,
+	    		y = current_y-1;
+	    	trySwipe(x,y);
+	   	};
+
+	    $slide.on( "swipeleft", goLeft );
+	    $slide.on( "swiperight", goRight);
+	    $slide.on( "swipeup", goUp );
+	   	$slide.on( "swipedown", goDown );
+    }
+
 
 });
